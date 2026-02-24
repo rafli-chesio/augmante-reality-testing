@@ -11,47 +11,35 @@
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
 
   <script>
-    AFRAME.registerComponent('drag-rotate', {
+    AFRAME.registerComponent('touch-rotate', {
       init: function () {
-        this.ifMouseDown = false;
-        this.x_cord = 0;
-        this.y_cord = 0;
-      },
+        this.startX = 0;
+        this.rotationY = 0;
+        this.isTouching = false;
     
-      play: function () {
-        window.addEventListener('mousedown', this.OnDocumentMouseDown.bind(this));
-        window.addEventListener('mouseup', this.OnDocumentMouseUp.bind(this));
-        window.addEventListener('mousemove', this.OnDocumentMouseMove.bind(this));
+        this.el.sceneEl.canvas.addEventListener('touchstart', (e) => {
+          this.isTouching = true;
+          this.startX = e.touches[0].clientX;
+        });
     
-        window.addEventListener('touchstart', this.OnDocumentMouseDown.bind(this));
-        window.addEventListener('touchend', this.OnDocumentMouseUp.bind(this));
-        window.addEventListener('touchmove', this.OnDocumentMouseMove.bind(this));
-      },
+        this.el.sceneEl.canvas.addEventListener('touchmove', (e) => {
+          if (!this.isTouching) return;
     
-      OnDocumentMouseDown: function (event) {
-        this.ifMouseDown = true;
-        this.x_cord = event.touches ? event.touches[0].clientX : event.clientX;
-        this.y_cord = event.touches ? event.touches[0].clientY : event.clientY;
-      },
+          let delta = e.touches[0].clientX - this.startX;
+          this.rotationY += delta * 0.3;
     
-      OnDocumentMouseUp: function () {
-        this.ifMouseDown = false;
-      },
+          this.el.setAttribute('rotation', {
+            x: 0,
+            y: this.rotationY,
+            z: 0
+          });
     
-      OnDocumentMouseMove: function (event) {
-        if (!this.ifMouseDown) { return; }
+          this.startX = e.touches[0].clientX;
+        });
     
-        var temp_x = event.touches ? event.touches[0].clientX : event.clientX;
-        var temp_y = event.touches ? event.touches[0].clientY : event.clientY;
-    
-        var deltaX = temp_x - this.x_cord;
-        var deltaY = temp_y - this.y_cord;
-    
-        this.el.object3D.rotation.y += deltaX / 100;
-        this.el.object3D.rotation.x += deltaY / 100;
-    
-        this.x_cord = temp_x;
-        this.y_cord = temp_y;
+        window.addEventListener('touchend', () => {
+          this.isTouching = false;
+        });
       }
     });
     </script>
