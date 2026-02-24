@@ -27,27 +27,12 @@
   <a-marker preset="hiro">
 
     <!-- 3D BOX -->
-    <a-box
-      position="0 0.5 0"
-      material="color: #4CC3D9"
-      animation="property: rotation; to: 0 360 0; loop: true; dur: 4000"
-    ></a-box>
-
-    <!-- 3D SPHERE -->
-    <a-sphere
-      position="1 0.8 0"
-      radius="0.5"
-      color="#EF2D5E"
-      animation="property: scale; dir: alternate; dur: 1000; loop: true; to: 1.5 1.5 1.5"
-    ></a-sphere>
-
-    <!-- TEXT -->
-    <a-text
-      value="AR by Rafli 🔥"
-      position="0 1.8 0"
-      align="center"
-      color="#000"
-    ></a-text>
+    <a-entity 
+    gltf-model="url(modelku.glb)"
+    scale="0.5 0.5 0.5"
+    position="0 0 0"
+    rotation="0 180 0">
+  </a-entity>
 
   </a-marker>
 
