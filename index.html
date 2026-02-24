@@ -10,6 +10,52 @@
   <!-- AR.js -->
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
 
+  <script>
+    AFRAME.registerComponent('drag-rotate', {
+      init: function () {
+        this.ifMouseDown = false;
+        this.x_cord = 0;
+        this.y_cord = 0;
+      },
+    
+      play: function () {
+        window.addEventListener('mousedown', this.OnDocumentMouseDown.bind(this));
+        window.addEventListener('mouseup', this.OnDocumentMouseUp.bind(this));
+        window.addEventListener('mousemove', this.OnDocumentMouseMove.bind(this));
+    
+        window.addEventListener('touchstart', this.OnDocumentMouseDown.bind(this));
+        window.addEventListener('touchend', this.OnDocumentMouseUp.bind(this));
+        window.addEventListener('touchmove', this.OnDocumentMouseMove.bind(this));
+      },
+    
+      OnDocumentMouseDown: function (event) {
+        this.ifMouseDown = true;
+        this.x_cord = event.touches ? event.touches[0].clientX : event.clientX;
+        this.y_cord = event.touches ? event.touches[0].clientY : event.clientY;
+      },
+    
+      OnDocumentMouseUp: function () {
+        this.ifMouseDown = false;
+      },
+    
+      OnDocumentMouseMove: function (event) {
+        if (!this.ifMouseDown) { return; }
+    
+        var temp_x = event.touches ? event.touches[0].clientX : event.clientX;
+        var temp_y = event.touches ? event.touches[0].clientY : event.clientY;
+    
+        var deltaX = temp_x - this.x_cord;
+        var deltaY = temp_y - this.y_cord;
+    
+        this.el.object3D.rotation.y += deltaX / 100;
+        this.el.object3D.rotation.x += deltaY / 100;
+    
+        this.x_cord = temp_x;
+        this.y_cord = temp_y;
+      }
+    });
+    </script>
+
   <style>
     body { margin: 0; overflow: hidden; }
   </style>
@@ -28,10 +74,10 @@
 
     <!-- 3D BOX -->
     <a-entity 
-    gltf-model="url(gedungunimed.glb)"
-    scale="0.05 0.05 0.05"
+    gltf-model="url(modelku.glb)"
+    scale="0.1 0.1 0.1"
     position="0 0 0"
-    rotation="-90 0 0">
+    drag-rotate>
   </a-entity>
 
   </a-marker>
