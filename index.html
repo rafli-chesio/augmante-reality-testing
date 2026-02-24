@@ -11,13 +11,11 @@
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
 
   <script>
-    AFRAME.registerComponent('mobile-rotate-full', {
+    AFRAME.registerComponent('mobile-rotate', {
       init: function () {
         const el = this.el;
         let startX = 0;
-        let startY = 0;
-        let rotX = 0;
-        let rotY = 0;
+        let currentRotation = 0;
     
         const scene = document.querySelector('a-scene');
     
@@ -25,25 +23,19 @@
     
           scene.canvas.addEventListener('touchstart', function (e) {
             startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
           });
     
           scene.canvas.addEventListener('touchmove', function (e) {
-    
             let deltaX = e.touches[0].clientX - startX;
-            let deltaY = e.touches[0].clientY - startY;
-    
-            rotY += deltaX * 0.5;  // kiri kanan
-            rotX += deltaY * 0.5;  // atas bawah
+            currentRotation += deltaX * 0.5;
     
             el.setAttribute('rotation', {
-              x: rotX,
-              y: rotY,
+              x: 0,
+              y: currentRotation,
               z: 0
             });
     
             startX = e.touches[0].clientX;
-            startY = e.touches[0].clientY;
           });
     
         });
@@ -69,7 +61,7 @@
 
     <a-entity 
     gltf-model="url(modelku.glb)"
-    scale="0.05 0.05 0.05"
+    scale="0.5 0.5 0.5"
     mobile-rotate>
   </a-entity>
 
