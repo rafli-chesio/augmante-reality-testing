@@ -10,6 +10,39 @@
   <!-- AR.js -->
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
 
+  <script>
+    AFRAME.registerComponent('mobile-rotate', {
+      init: function () {
+        const el = this.el;
+        let startX = 0;
+        let currentRotation = 0;
+    
+        const scene = document.querySelector('a-scene');
+    
+        scene.addEventListener('loaded', () => {
+    
+          scene.canvas.addEventListener('touchstart', function (e) {
+            startX = e.touches[0].clientX;
+          });
+    
+          scene.canvas.addEventListener('touchmove', function (e) {
+            let deltaX = e.touches[0].clientX - startX;
+            currentRotation += deltaX * 0.5;
+    
+            el.setAttribute('rotation', {
+              x: 0,
+              y: currentRotation,
+              z: 0
+            });
+    
+            startX = e.touches[0].clientX;
+          });
+    
+        });
+      }
+    });
+    </script>
+
   <style>
     body { margin: 0; overflow: hidden; }
   </style>
@@ -26,12 +59,10 @@
   <!-- Marker -->
   <a-marker preset="hiro">
 
-    <!-- 3D BOX -->
     <a-entity 
     gltf-model="url(modelku.glb)"
-    scale="0.05 0.05 0.05"
-    position="0 0 0"
-    rotation="0 180 0">
+    scale="0.1 0.1 0.1"
+    mobile-rotate>
   </a-entity>
 
   </a-marker>
