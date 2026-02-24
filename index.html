@@ -11,34 +11,33 @@
   <script src="https://cdn.jsdelivr.net/gh/AR-js-org/AR.js/aframe/build/aframe-ar.js"></script>
 
   <script>
-    AFRAME.registerComponent('touch-rotate', {
+    AFRAME.registerComponent('mobile-rotate', {
       init: function () {
-        this.startX = 0;
-        this.rotationY = 0;
-        this.isTouching = false;
+        const el = this.el;
+        let startX = 0;
+        let currentRotation = 0;
     
-        this.el.sceneEl.canvas.addEventListener('touchstart', (e) => {
-          this.isTouching = true;
-          this.startX = e.touches[0].clientX;
-        });
+        const scene = document.querySelector('a-scene');
     
-        this.el.sceneEl.canvas.addEventListener('touchmove', (e) => {
-          if (!this.isTouching) return;
+        scene.addEventListener('loaded', () => {
     
-          let delta = e.touches[0].clientX - this.startX;
-          this.rotationY += delta * 0.3;
-    
-          this.el.setAttribute('rotation', {
-            x: 0,
-            y: this.rotationY,
-            z: 0
+          scene.canvas.addEventListener('touchstart', function (e) {
+            startX = e.touches[0].clientX;
           });
     
-          this.startX = e.touches[0].clientX;
-        });
+          scene.canvas.addEventListener('touchmove', function (e) {
+            let deltaX = e.touches[0].clientX - startX;
+            currentRotation += deltaX * 0.5;
     
-        window.addEventListener('touchend', () => {
-          this.isTouching = false;
+            el.setAttribute('rotation', {
+              x: 0,
+              y: currentRotation,
+              z: 0
+            });
+    
+            startX = e.touches[0].clientX;
+          });
+    
         });
       }
     });
@@ -60,12 +59,10 @@
   <!-- Marker -->
   <a-marker preset="hiro">
 
-    <!-- 3D BOX -->
     <a-entity 
     gltf-model="url(modelku.glb)"
     scale="0.1 0.1 0.1"
-    position="0 0 0"
-    touch-rotate>
+    mobile-rotate>
   </a-entity>
 
   </a-marker>
